@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .hideDiv{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <input type="checkbox" onchange="toggleDivs()">Predefined Type
+    <div class="" id="man">
+        <input type="text" class="text" id="lat">
+        <input type="text" class="text" id="long">
+        <button onclick="manualWeather()">Fetch</button>
+    </div>
+    <div class="hideDiv" id="auto" >
+        <select id="select-region" onchange="assignLatLong()">
+            <option value="">--Select Region ---</option>
+
+            <option value="gangtok">Gangtok</option>
+            <option value="namchi">Namchi</option>
+            <option value="mangan">Mangan</option>
+            <option value="pakyong">Pakyong</option>
+            <option value="soreng">Soreng</option>
+
+        </select>
+    </div>
+    
+
+    <script>
+
+        function assignLatLong(){
+            const region = {
+                gangtok:{lat:27.3314,long:88.6138},
+                namchi:{lat:27.1666,long:88.3619},
+                mangan:{lat:27.5005,long:88.5346},
+                pakyong:{lat:27.2429,long:88.5969},
+                soreng:{lat:27.1678,long:88.2023}
+            }
+            const currentSelection = document.getElementById("select-region").value;
+            getWeatherData(region[currentSelection].lat,region[currentSelection].long);
+
+        }
+
+        function toggleDivs(){
+            const man = document.getElementById("man");
+            const auto = document.getElementById("auto");
+            man.classList.toggle("hideDiv");
+            auto.classList.toggle("hideDiv");
+        }
+            
+        async function manualWeather(){
+            const lat = document.getElementById("lat").value;
+            const long = document.getElementById("long").value;
+            getWeatherData(lat,long);
+        }
+
+        async function getWeatherData(lat,long){
+            getRequest = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&daily=weather_code`);
+            data = await getRequest.json();
+            console.log(data.daily);
+            
+            // console.log(weatherData);
+
+        }
+
+    </script>
+</body>
+</html>
